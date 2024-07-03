@@ -137,7 +137,7 @@ class TetrisEngine:
                  penalise_holes_increase=False):
         self.width = width
         self.height = height
-        self.board = np.zeros(shape=(width, height), dtype=np.float)
+        self.board = np.zeros(shape=(width, height), dtype=np.float32)
         self._scoring = {
             'reward_step': reward_step,
             'penalise_height': penalise_height,
