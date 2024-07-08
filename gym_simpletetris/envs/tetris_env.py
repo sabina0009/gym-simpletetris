@@ -400,7 +400,7 @@ class TetrisEnv(gym.Env):
         state = np.array(state, dtype=np.float32)
 
         info = self._get_info()
-        return state.flatten(), reward, done, info
+        return state, reward, done, info
 
     def reset(self, return_info=False):
         state = self.engine.clear()
@@ -408,7 +408,7 @@ class TetrisEnv(gym.Env):
         state = np.array(state, dtype=np.float32)
 
         info = self._get_info()
-        return (state.flatten(), info) if return_info else state.flatten()
+        return (state, info) if return_info else state
 
     def _observation(self, mode=None, state=None, extend_dims=None):
         obs = state
