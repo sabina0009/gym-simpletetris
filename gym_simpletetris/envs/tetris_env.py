@@ -1,7 +1,7 @@
 import numpy as np
 import random
-import gym
-from gym import spaces
+import gymnasium
+from gymnasium import spaces
 import pygame
 
 # Adapted from the Tetris engine in the TetrisRL project by jaybutera
@@ -255,7 +255,8 @@ class TetrisEngine:
         # reward = random.randint(0, 0)
         reward = 1 if self._scoring.get('reward_step') else 0
 
-        done = False
+        terminated = False
+        truncated = False
         if self._has_dropped():
             self._lock_delay = self._lock_delay_fn(self._lock_delay)
 
@@ -277,7 +278,7 @@ class TetrisEngine:
                 if np.any(self.board[:, 0]):
                     self._count_holes()
                     self.n_deaths += 1
-                    done = True
+                    terminated = True
                     reward = -100
                 else:
                     old_holes = self.holes
@@ -301,7 +302,7 @@ class TetrisEngine:
         self._set_piece(True)
         state = np.copy(self.board)
         self._set_piece(False)
-        return state, reward, done
+        return state, reward, terminated, truncated
 
     def clear(self):
         self.time = 0
@@ -335,7 +336,7 @@ class TetrisEngine:
         return s
 
 
-class TetrisEnv(gym.Env):
+class TetrisEnv(gymnasium.Env):
     metadata = {'render.modes': ['human', 'rgb_array'], "render_fps": 8}
 
     # TODO: Add more reward options e.g. wells
@@ -395,12 +396,12 @@ class TetrisEnv(gym.Env):
         return self.engine.get_info()
 
     def step(self, action):
-        state, reward, done = self.engine.step(action)
+        state, reward, terminated, truncated = self.engine.step(action)
         state = self._observation(state=state)
         state = np.array(state, dtype=np.float32)
 
         info = self._get_info()
-        return state, reward, done, info
+        return state, reward, terminated, truncated, info
 
     def reset(self, return_info=False):
         state = self.engine.clear()
