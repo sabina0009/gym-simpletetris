@@ -403,13 +403,13 @@ class TetrisEnv(gymnasium.Env):
         info = self._get_info()
         return state, reward, terminated, truncated, info
 
-    def reset(self, return_info=False):
+    def reset(self, seed=None, return_info=False):
         state = self.engine.clear()
         state = self._observation(state=state)
         state = np.array(state, dtype=np.float32)
 
         info = self._get_info()
-        return (state, info) if return_info else state
+        return (state, info) if return_info else (state, {})
 
     def _observation(self, mode=None, state=None, extend_dims=None):
         obs = state
