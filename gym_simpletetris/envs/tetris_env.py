@@ -176,6 +176,9 @@ class TetrisEngine:
         self._lock_delay = 0
         self._step_reset = step_reset
 
+        #added code
+        self.has_dropped = False
+
         # used for generating shapes
         # self.shape_counts = [0] * len(shapes)
         self.shape_counts = dict(zip(shape_names, [0] * len(shapes)))
@@ -257,7 +260,9 @@ class TetrisEngine:
 
         terminated = False
         truncated = False
+        self.has_dropped = False
         if self._has_dropped():
+            self.has_dropped = True
             self._lock_delay = self._lock_delay_fn(self._lock_delay)
 
             if self._lock_delay == 0:
